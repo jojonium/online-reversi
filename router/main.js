@@ -1,9 +1,9 @@
 module.exports = (app) => {
   app.get('/', (req, res) => {
-    res.render('index.html')
+    res.render('pages/index')
   });
 
   app.get('/about', (req, res) => {
-    res.render('about.html');
+    res.render('pages/about');
   });
 }

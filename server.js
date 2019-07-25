@@ -1,15 +1,17 @@
-var express = require('express');
-var app = express();
+const express = require('express');
+const app = express();
 
-require('./router/main')(app);
-app.set('views', __dirname + '/views');
+// set the view engine to ejs
 app.set('view engine', 'ejs');
+
+// specify router
+require('./router/main')(app);
+
+// specify views directory
+app.set('views', __dirname + '/views');
+
 app.engine('html', require('ejs').renderFile);
 
-app.get('/', (req, res) => {
-  res.send('Hello World');
-});
-
-var server = app.listen(3000, () => {
+const server = app.listen(3000, () => {
   console.log('Started server listening on port 3000');
 });
