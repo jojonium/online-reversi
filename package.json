@@ -1,0 +1,20 @@
+{
+  "name": "online-reversi",
+  "version": "0.0.1",
+  "description": "A web app for playing reversi online",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Joseph Petitti",
+  "license": "MIT",
+  "dependencies": {
+    "ejs": "^2.6.2",
+    "express": "^4.17.1",
+    "mysql": "^2.17.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jojonium/online-reversi"
+  }
+}
