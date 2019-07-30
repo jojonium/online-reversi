@@ -10,16 +10,11 @@ app.set('view engine', 'ejs');
 require('./router/main')(app);
 require('./router/api')(app);
 
+// include database credentials in separate file for security
+const conn = require('./connection');
+
 // use to parse application/json
 app.use(bodyParser.json());
-
-// create database connection
-const conn = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'restful_db'
-});
 
 // connect to the database
 conn.connect((err) => {
