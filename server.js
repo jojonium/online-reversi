@@ -11,13 +11,13 @@ require('./router/main')(app);
 require('./router/api')(app);
 
 // include database credentials in separate file for security
-const conn = require('./connection');
+const connection = mysql.createConnection(require('./connection'));
 
 // use to parse application/json
 app.use(bodyParser.json());
 
 // connect to the database
-conn.connect((err) => {
+connection.connect((err) => {
   if (err) throw err;
   console.log('Connected to MySQL database...');
 });
