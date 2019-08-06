@@ -14,3 +14,16 @@ A simple web app for playing the game Reversi online.
 * Join an existing game from a link
 * Close the page and return to it later without losing the game state
 * Prevent cheating with server-side checks
+
+## How to run:
+
+```
+$ cp connection.example.js connection.js
+```
+
+Then edit `connection.js` so it has the real database credentials.
+
+```
+$ npm install
+$ npm start
+```
