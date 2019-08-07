@@ -1,4 +1,4 @@
-module.exports = (app) => {
+module.exports = (app, conn) => {
 
   // show all products
   app.get('/api/products', (req, res) => {
