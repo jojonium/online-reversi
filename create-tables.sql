@@ -11,9 +11,10 @@ DROP TABLE IF EXISTS `game`;
 DROP TABLE IF EXISTS `player`;
 
 CREATE TABLE `game` (
-	id       VARCHAR(10) NOT NULL PRIMARY KEY,
-	created  DATETIME NOT NULL,
-	modified DATETIME
+	id         VARCHAR(10) NOT NULL PRIMARY KEY,
+	created    DATETIME NOT NULL,
+	modified   DATETIME,
+	numPlayers INT -- TODO make a trigger to enforce this
 );
 
 CREATE TABLE `player` (

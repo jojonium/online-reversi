@@ -1,6 +1,10 @@
+const helpers = require('./helpers');
+
 module.exports = (app, conn) => {
-  // get info about a single game from the database, the last time it was
-  // modified and the names of each of the players
+  /*
+   * get info about a single game from the database, including the last time it
+   * was modified and the names of each of the players
+   */
   app.get('/api/game/:id', (req, res) => {
     const sql =
       `SELECT P.name, G.modified
@@ -25,6 +29,25 @@ module.exports = (app, conn) => {
         ));
       }
     });
+  });
+
+
+  /*
+   * Create a game. This adds a new game to the database with a particular
+   * number of players
+   * Input format: {
+   *   numPlayers: 2,
+   * }
+   * Output format: {
+   *   id: 'c9bn3k1',
+   * }
+   */
+  app.post('/api/game', (req, res) => {
+    const data = {
+      numPlayers: req.body.numPlayers,
+    };
+    const nowMySQL = helpers.toMySQLDateTime(new Date());
+    console.log(nowMySQL);
   });
 
 
