@@ -36,8 +36,8 @@ ALTER TABLE plays ADD CONSTRAINT fk_pid FOREIGN KEY (pID) REFERENCES player(id);
 
 /* Test Data */
 
-INSERT INTO game VALUES ('asdf', '2019-02-03 10:52:00', '2019-08-09 01:22:00');
-INSERT INTO game VALUES ('qwerty', '2017-10-27 09:22:00', NULL);
+INSERT INTO game VALUES ('asdf', '2019-02-03 10:52:00', '2019-08-09 01:22:00', 2);
+INSERT INTO game VALUES ('qwerty', '2017-10-27 09:22:00', NULL, 3);
 
 INSERT INTO player (name, password, created) VALUES 
 	('John', 'asldkfjaldskfj', '2019-01-01 10:20:20'),

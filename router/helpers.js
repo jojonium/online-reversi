@@ -20,7 +20,23 @@ const toMySQLDateTime = (d) => {
   twoDigits(d.getUTCMinutes()) + ':' + twoDigits(d.getUTCSeconds());
 };
 
+
+/*
+ * Generates a 6-10 digit random string to be used as a game id
+ */
+const genGameID = () => {
+  const chars = '0123456789abcdefghijklmnopqrstuvwxyz';
+  const length = Math.floor(Math.random() * 5) + 6;
+  let out = '';
+  for (let i = 0; i < length; ++i) {
+    out += chars[Math.floor(Math.random() * 36)];
+  }
+  return out;
+};
+
+
 module.exports = {
   twoDigits,
   toMySQLDateTime,
+  genGameID,
 };

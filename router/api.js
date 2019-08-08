@@ -43,11 +43,25 @@ module.exports = (app, conn) => {
    * }
    */
   app.post('/api/game', (req, res) => {
-    const data = {
-      numPlayers: req.body.numPlayers,
-    };
-    const nowMySQL = helpers.toMySQLDateTime(new Date());
-    console.log(nowMySQL);
+    if (isNaN(req.body.numPlayers)) {
+      res.send(JSON.stringify({
+        'status': 400,
+        'error': 'Invalid or missing numPlayers',
+        'response': null,
+      }));
+    } else {
+      const numPlayers = req.body.numPlayers;
+      const nowMySQL = helpers.toMySQLDateTime(new Date());
+      const newID = helpers.genGameID();
+      const sql = `INSERT INTO game VALUES 
+          ('${newID}', '${nowMySQL}', '${nowMySQL}', ${numPlayers});`;
+      conn.query(sql, (err, results) => {
+        if (err) throw err;
+        res.send(JSON.stringify(
+            {'status': 201, 'error': null, 'response': {id: newID}}
+        ));
+      });
+    }
   });
 
 
