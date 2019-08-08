@@ -1,6 +1,4 @@
-module.exports = {
-  host: 'localhost',
-  user: 'reversi',
-  password: 'password',
-  database: 'reversi_db'
-}
+export const host = 'localhost';
+export const user = 'reversi';
+export const password = 'password';
+export const database = 'reversi_db';

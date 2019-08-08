@@ -1,11 +1,10 @@
-const express    = require('express');
+const express = require('express');
 const bodyParser = require('body-parser');
-const mysql      = require('mysql');
+const mysql = require('mysql');
 const app = express();
 
 // set the view engine to ejs
 app.set('view engine', 'ejs');
-
 
 // include database credentials in separate file for security
 const conn = mysql.createConnection(require('./connection'));
@@ -31,6 +30,6 @@ app.use(express.static(__dirname + '/static'));
 
 app.engine('html', require('ejs').renderFile);
 
-const server = app.listen(3000, () => {
+app.listen(3000, () => {
   console.log('Started server listening on port 3000');
 });
