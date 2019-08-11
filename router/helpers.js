@@ -1,7 +1,7 @@
 
 /**
  * Pads a one or two digit number to two digits
- * @param {int} n a one or two digit number
+ * @param {number} n a one or two digit number
  * @return {string} the string representation of n, left-padded with zeroes to
  * be exactly two characters
  */

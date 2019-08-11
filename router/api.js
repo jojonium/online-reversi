@@ -23,6 +23,7 @@ module.exports = (app, conn) => {
         }));
       } else {
         // otherwise make the results a little more readable and send them
+        /** @type string[] */
         const players = results.map((r) => r.name);
         const output = {'players': players, 'modified': results[0].modified};
         res.status(200).send(JSON.stringify(
@@ -69,6 +70,7 @@ module.exports = (app, conn) => {
         'response': null,
       }));
     } else {
+      /** @type number */
       const numPlayers = req.body.numPlayers;
       const nowMySQL = helpers.toMySQLDateTime(new Date());
       const newID = helpers.genGameID();

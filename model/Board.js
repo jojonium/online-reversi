@@ -5,11 +5,12 @@
 class Board {
   /**
    * Creates a new Board object to keep track of the board state and players
-   * @param {int} width the width of the board, default 8
-   * @param {int} height the height of the board, default 8
-   * @param {int} numPlayers the number of players, default 2
+   * @param {number} [width=8] the width of the board
+   * @param {number} [height=8] the height of the board
+   * @param {number} [numPlayers=2] the number of players, default 2
    */
   constructor(width = 8, height = 8, numPlayers = 2) {
+    /** @type [[]] */
     const state = new Array(width);
     for (let i = 0; i < width; ++i) {
       state[i] = new Array(height);
