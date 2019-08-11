@@ -1,8 +1,10 @@
 
-/*
-* Pads a 1 or 2 digit number to two digits. Throws an error if given an
-* input that is more than two digits already or isn't a number
-*/
+/**
+ * Pads a one or two digit number to two digits
+ * @param {int} n a one or two digit number
+ * @return {string} the string representation of n, left-padded with zeroes to
+ * be exactly two characters
+ */
 const twoDigits = (n) => {
   if (isNaN(n) || n.toString().length > 2) {
     throw new TypeError('Received input that is too long or not a number');
@@ -10,9 +12,10 @@ const twoDigits = (n) => {
   return n.toString().padStart(2, '0');
 };
 
-
-/*
+/**
  * Converts a JavaScript Date object to a MySQL DateTime string
+ * @param {Date} d a JavaScript Date object
+ * @return{string} a MySQL-compatible string version of d
  */
 const toMySQLDateTime = (d) => {
   return d.getUTCFullYear() + '-' + twoDigits(1 + d.getUTCMonth()) + '-' +
@@ -21,8 +24,10 @@ const toMySQLDateTime = (d) => {
 };
 
 
-/*
- * Generates a 6-10 digit random string to be used as a game id
+/**
+ * Generates a 6-10 digit random string to be used as a game id, consisting of
+ * lowercase letters and numbers
+ * @return {string} the random game ID
  */
 const genGameID = () => {
   const chars = '0123456789abcdefghijklmnopqrstuvwxyz';

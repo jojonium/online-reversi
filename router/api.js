@@ -1,4 +1,5 @@
 const helpers = require('./helpers');
+const Board = require('../model/Board');
 
 module.exports = (app, conn) => {
   /*
@@ -15,7 +16,7 @@ module.exports = (app, conn) => {
 
       if (results.length < 1) {
         // if no results, send an error
-        res.send(JSON.stringify({
+        res.status(400).send(JSON.stringify({
           'status': 400,
           'error': 'Database returned no data. Probably an invalid game ID',
           'response': null,
@@ -24,7 +25,7 @@ module.exports = (app, conn) => {
         // otherwise make the results a little more readable and send them
         const players = results.map((r) => r.name);
         const output = {'players': players, 'modified': results[0].modified};
-        res.send(JSON.stringify(
+        res.status(200).send(JSON.stringify(
             {'status': 200, 'error': null, 'response': output}
         ));
       }
@@ -37,27 +38,50 @@ module.exports = (app, conn) => {
    * number of players
    * Input format: {
    *   numPlayers: 2,
+   *   boardWidth: 8,
+   *   boardHeight: 8
    * }
    * Output format: {
    *   id: 'c9bn3k1',
    * }
    */
   app.post('/api/game', (req, res) => {
-    if (isNaN(req.body.numPlayers)) {
-      res.send(JSON.stringify({
+    // error checking
+    if (isNaN(req.body.numPlayers) || req.body.numPlayers < 2 ||
+        req.body.numPlayers > 10) {
+      res.status(400).send(JSON.stringify({
         'status': 400,
         'error': 'Invalid or missing numPlayers',
+        'response': null,
+      }));
+    } else if (isNaN(req.body.boardWidth) || req.body.boardWidth < 4 ||
+        req.body.boardWidth > 16) {
+      res.status(400).send(JSON.stringify({
+        'status': 400,
+        'error': 'Invalid or Missing boardWidth',
+        'response': null,
+      }));
+    } else if (isNaN(req.body.boardHeight) || req.body.boardHeight < 4 ||
+        req.body.boardHeight > 16) {
+      res.status(400).send(JSON.stringify({
+        'status': 400,
+        'error': 'Invalid or Missing boardHeight',
         'response': null,
       }));
     } else {
       const numPlayers = req.body.numPlayers;
       const nowMySQL = helpers.toMySQLDateTime(new Date());
       const newID = helpers.genGameID();
+      const b = new Board.Board(req.body.boardWidth, req.body.BoardHeight,
+          numPlayers);
+      const boardString = b.defaultStart().stateToString();
       const sql = `INSERT INTO game VALUES 
-          ('${newID}', '${nowMySQL}', '${nowMySQL}', ${numPlayers});`;
+          ('${newID}', '${nowMySQL}', '${nowMySQL}', ${numPlayers},
+          ${req.body.boardWidth}, ${req.body.boardHeight}, '${boardString}');`;
+
       conn.query(sql, (err, results) => {
         if (err) throw err;
-        res.send(JSON.stringify(
+        res.status(201).send(JSON.stringify(
             {'status': 201, 'error': null, 'response': {id: newID}}
         ));
       });
@@ -74,7 +98,7 @@ module.exports = (app, conn) => {
     const sql = 'SELECT * FROM product';
     conn.query(sql, (err, results) => {
       if (err) throw err;
-      res.send(JSON.stringify(
+      res.status(200).send(JSON.stringify(
           {'status': 200, 'error': null, 'response': results}
       ));
     });
@@ -85,7 +109,7 @@ module.exports = (app, conn) => {
     const sql = 'SELECT * FROM product WHERE product_id=' + req.params.id;
     conn.query(sql, (err, results) => {
       if (err) throw err;
-      res.send(JSON.stringify(
+      res.status(200).send(JSON.stringify(
           {'status': 200, 'error': null, 'response': results}
       ));
     });
@@ -100,7 +124,7 @@ module.exports = (app, conn) => {
     const sql = 'INSERT INTO product SET ?';
     conn.query(sql, data, (err, results) => {
       if (err) throw err;
-      res.send(JSON.stringify(
+      res.status(200).send(JSON.stringify(
           {'status': 200, 'error': null, 'response': results}
       ));
     });
@@ -113,7 +137,7 @@ module.exports = (app, conn) => {
       req.params.id;
     conn.query(sql, (err, results) => {
       if (err) throw err;
-      res.send(JSON.stringify(
+      res.status(200).send(JSON.stringify(
           {'status': 200, 'error': null, 'response': results}
       ));
     });
@@ -124,7 +148,7 @@ module.exports = (app, conn) => {
     const sql = 'DELETE FROM product WHERE product_id=' + req.params.id;
     conn.query(sql, (err, results) => {
       if (err) throw err;
-      res.send(JSON.stringify(
+      res.status(200).send(JSON.stringify(
           {'status': 200, 'error': null, 'response': results}
       ));
     });
