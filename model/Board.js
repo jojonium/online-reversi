@@ -53,7 +53,7 @@ class Board {
    */
   stateToString() {
     let out = '';
-    for (let i = 0; i < this.width; ++j) {
+    for (let i = 0; i < this.width; ++i) {
       for (let j = 0; j < this.height; ++j) {
         out += this.state[i][j];
       }

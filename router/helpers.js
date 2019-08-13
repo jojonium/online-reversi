@@ -13,7 +13,7 @@ const twoDigits = (n) => {
 };
 
 /**
- * Converts a JavaScript Date object to a MySQL DateTime string
+ * Converts a JavaScript Date object to a MySQL DateTime string in UTC
  * @param {Date} d a JavaScript Date object
  * @return{string} a MySQL-compatible string version of d
  */

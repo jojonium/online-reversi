@@ -17,7 +17,8 @@ CREATE TABLE `game` (
 	numPlayers INT, -- TODO make a trigger to enforce this
 	width      INT NOT NULL,
 	height     INT NOT NULL,
-	boardState VARCHAR(256)
+	boardState VARCHAR(256), -- allows for 16x16 board
+	nextPlayer INT
 );
 
 CREATE TABLE `player` (
@@ -35,12 +36,13 @@ CREATE TABLE `plays` (
 ALTER TABLE plays ADD CONSTRAINT pk_gidpid PRIMARY KEY (gID, pID);
 ALTER TABLE plays ADD CONSTRAINT fk_gid FOREIGN KEY (gID) REFERENCES game(id);
 ALTER TABLE plays ADD CONSTRAINT fk_pid FOREIGN KEY (pID) REFERENCES player(id);
+ALTER TABLE game ADD CONSTRAINT fk_np FOREIGN KEY (nextPlayer) REFERENCES player(id);
 
 
 /* Test Data */
 
-INSERT INTO game VALUES ('asdf', '2019-02-03 10:52:00', '2019-08-09 01:22:00', 2, 8, 8, NULL);
-INSERT INTO game VALUES ('qwerty', '2017-10-27 09:22:00', NULL, 3, 8, 8, NULL);
+INSERT INTO game VALUES ('asdf', '2019-02-03 10:52:00', '2019-08-09 01:22:00', 2, 8, 8, NULL, NULL);
+INSERT INTO game VALUES ('qwerty', '2017-10-27 09:22:00', NULL, 3, 8, 8, NULL, NULL);
 
 INSERT INTO player (name, password, created) VALUES 
 	('John', 'asldkfjaldskfj', '2019-01-01 10:20:20'),
@@ -52,4 +54,3 @@ INSERT INTO plays VALUES ('asdf', 1);
 INSERT INTO plays VALUES ('asdf', 2); 
 INSERT INTO plays VALUES ('asdf', 3);
 INSERT INTO plays VALUES ('qwerty', 4);
-
