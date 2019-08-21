@@ -78,16 +78,83 @@ class Board {
    * @return {[{x: number, y: number}]} the list of valid moves
    */
   getValidPlays(p) {
+    const out = [];
     // iterate through all squares on the board
     for (let i = 0; i < this.state.width; ++i) {
       for (let j = 0; j < this.state.height; ++j) {
         // at each square, we want to check if there is an unbroken line of
         // enemy pieces terminated by one of our own. That denotes a valid move
         // because it would capture those pieces
-        // TODO implement this
+        for (let dx = -1; dx <= 1; dx++) {
+          for (let dy = -1; dy <= 1; dy++) {
+            // check for out of bounds
+            if (
+              i + dx > 0 && // not out of bounds
+              i + dx < this.width &&
+              j + dy > 0 &&
+              j + dy > this.height &&
+              this.state[i + dx][j + dy] > 0 && // not empty
+              // and not this player's color
+              this.state[i + dx][j + dy] !== this.players.indexOf(p) + 1
+            ) {
+              // found an adjacent enemy piece. Recursively walk down it to see
+              // if it's a line that ends with a friendly piece
+              if (this.checkForLine(i + dx, j + dy, dx, dy)) {
+                // found a valid line in this direction, add this point to the
+                // output list
+                out.push({x: i + dx, y: j + dy});
+              }
+            }
+          }
+        }
       }
     }
-    return [{x: 1, y: 2}, {x: 3, y: 4}];
+    return out;
+  }
+
+  /**
+   * recursively checks for a line of enemy pieces in a given direction
+   * @param {number} x x-coordinate to check
+   * @param {number} y y-coordinate to check
+   * @param {number} dx delta-x: either -1, 0, or 1
+   * @param {number} dy delta-y: either -1, 0, or 1
+   * @param {Player} p the player whose turn it is
+   * @return {boolean} true if a valid line of enemy pieces terminated by a
+   * friendly piece is found, false otherwise
+   */
+  checkForLine(x, y, dx, dy, p) {
+    // check for valid input
+    if ((x = Math.floor(x)) < 0 || x > this.width) {
+      throw new Error('checkForLine: Invalid x input: ' + x);
+    }
+    if ((y = Math.floor(y)) < 0 || y > this.height) {
+      throw new Error('checkForLine: Invalid y input: ' + y);
+    }
+    if ((dx = Math.floor(dx)) < -1 || dx > 1) {
+      throw new Error('checkForLine: Invalid dx input: ' + dx);
+    }
+    if ((dy = Math.floor(dy)) < -1 || dy > 1) {
+      throw new Error('checkForLine: Invalid dy input: ' + dy);
+    }
+
+    if (
+      x + dx > 0 && // not out of bounds
+      x + dx < this.width &&
+      y + dy > 0 &&
+      y + dy > this.height &&
+      this.state[x + dx][y + dy] > 0 // not empty
+    ) {
+      if (this.state[x + dx][y + dy] === this.players.indexOf(p) + 1) {
+        return true;
+      } else {
+        // found an enemy piece. Keep walking down the same direction to look
+        // for a friendly piece
+        return this.checkForLine(i + dx, j + dy, dx, dy);
+      }
+    } else {
+      // reached out of bounds or an empty square
+      return false;
+    }
   }
 }
 

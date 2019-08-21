@@ -36,4 +36,52 @@ describe('Board', function() {
       assert.strictEqual(initialBoardString, correctString);
     });
   });
+
+  describe('#checkForLine', function() {
+    it('should throw error on invalid input', function() {
+      const testBoard = new Board().defaultStart();
+      assert.throws(
+          () => {
+            testBoard.checkForLine(-2, 3, 0, 0);
+          },
+          new Error('checkForLine: Invalid x input: -2')
+      );
+      assert.throws(
+          () => {
+            testBoard.checkForLine(5, 30, 0, 0);
+          },
+          new Error('checkForLine: Invalid y input: 30')
+      );
+      assert.throws(
+          () => {
+            testBoard.checkForLine(5.5, 8, -4, 0);
+          },
+          new Error('checkForLine: Invalid dx input: -4')
+      );
+      assert.throws(
+          () => {
+            testBoard.checkForLine(5.5, 8, -1, 33.3);
+          },
+          new Error('checkForLine: Invalid dy input: 33')
+      );
+    });
+
+    it('should return false when valid line not found', function() {
+      const testBoard2 = new Board();
+      const p1 = testBoard2.players[0];
+      testBoard2.state = [
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 1, 1, 1, 0, 0],
+        [0, 0, 0, 2, 1, 2, 0, 0],
+        [0, 0, 2, 2, 0, 0, 0, 0],
+        [0, 1, 0, 2, 0, 0, 0, 0],
+        [0, 0, 0, 2, 0, 0, 0, 0],
+      ];
+      assert.strictEqual(testBoard2.checkForLine(3, 3, -1, 0, p1), false);
+      // TODO this needs more testing
+
+    });
+  });
 });
