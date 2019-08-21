@@ -6,7 +6,8 @@ const Player = require('./Player');
  */
 class Board {
   /**
-   * Creates a new Board object to keep track of the board state and players
+   * Creates a new Board object to keep track of the board state and players.
+   * State is accessed as myBoard.state[column][row]
    * @param {number} [width=8] the width of the board
    * @param {number} [height=8] the height of the board
    * @param {number} [numPlayers=2] the number of players
@@ -47,8 +48,8 @@ class Board {
 
     this.state[midX - 1][midY - 1] = 1;
     this.state[midX][midY - 1] = 2;
-    this.state[midX - 1][midY] = 1;
-    this.state[midX][midY] = 2;
+    this.state[midX - 1][midY] = 2;
+    this.state[midX][midY] = 1;
 
     return this;
   }
@@ -64,6 +65,7 @@ class Board {
       for (let j = 0; j < this.height; ++j) {
         out += this.state[i][j];
       }
+      out += '\n';
     }
 
     return out;
