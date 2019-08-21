@@ -27,3 +27,8 @@ Then edit `connection.js` so it has the real database credentials.
 $ npm install
 $ npm start
 ```
+
+## Testing
+
+We use [mocha](https://mochajs.org/) for testing. Put unit tests in the `test`
+folder, and use `npm test` to run them.

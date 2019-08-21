@@ -14,7 +14,10 @@ app.use(bodyParser.json());
 
 // connect to the database
 conn.connect((err) => {
-  if (err) throw err;
+  if (err) {
+    console.error('Failed to connect to the database');
+    throw err;
+  }
   console.log('Connected to MySQL database...');
 });
 
@@ -28,6 +31,7 @@ app.set('views', __dirname + '/views');
 // specify directory for static content
 app.use(express.static(__dirname + '/static'));
 
+// TODO maybe there's a better rendering engine?
 app.engine('html', require('ejs').renderFile);
 
 app.listen(3000, () => {

@@ -1,3 +1,5 @@
+const Player = require('./Player');
+
 /**
  * This class represents a Board, including information on where all the pieces
  * are and how many people are playing
@@ -8,6 +10,7 @@ class Board {
    * @param {number} [width=8] the width of the board
    * @param {number} [height=8] the height of the board
    * @param {number} [numPlayers=2] the number of players
+   * @constructor
    */
   constructor(width = 8, height = 8, numPlayers = 2) {
     /** @type number[][] */
@@ -23,7 +26,11 @@ class Board {
     this.height = height;
     this.state = state;
     this.numPlayers = numPlayers;
-  };
+    this.players = new Array(numPlayers);
+    for (let i = 0; i < numPlayers; ++i) {
+      this.players[i] = new Player();
+    }
+  }
 
 
   /**
@@ -44,7 +51,7 @@ class Board {
     this.state[midX][midY] = 2;
 
     return this;
-  };
+  }
 
 
   /**
@@ -60,10 +67,8 @@ class Board {
     }
 
     return out;
-  };
-};
+  }
+}
 
 
-module.exports = {
-  Board,
-};
+module.exports = Board;
