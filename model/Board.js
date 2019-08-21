@@ -70,6 +70,25 @@ class Board {
 
     return out;
   }
+
+
+  /**
+   * returns an array of points representing valid moves for a given player
+   * @param {Player} p the player for whom the moves are valid
+   * @return {[{x: number, y: number}]} the list of valid moves
+   */
+  getValidPlays(p) {
+    // iterate through all squares on the board
+    for (let i = 0; i < this.state.width; ++i) {
+      for (let j = 0; j < this.state.height; ++j) {
+        // at each square, we want to check if there is an unbroken line of
+        // enemy pieces terminated by one of our own. That denotes a valid move
+        // because it would capture those pieces
+        // TODO implement this
+      }
+    }
+    return [{x: 1, y: 2}, {x: 3, y: 4}];
+  }
 }
 
 
