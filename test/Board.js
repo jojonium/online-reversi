@@ -102,13 +102,13 @@ describe('Board', function() {
       );
       assert.throws(
           () => {
-            testBoard.checkForLine(5.5, 8, -4, 0, p1);
+            testBoard.checkForLine(5.5, 7, -4, 0, p1);
           },
           new Error('checkForLine: Invalid dx input: -4')
       );
       assert.throws(
           () => {
-            testBoard.checkForLine(5.5, 8, -1, 33.3, p1);
+            testBoard.checkForLine(5.5, 7, -1, 33.3, p1);
           },
           new Error('checkForLine: Invalid dy input: 33')
       );

@@ -155,10 +155,10 @@ class Board {
    */
   checkForLine(x, y, dx, dy, p, first = true) {
     // check for valid input
-    if ((x = Math.floor(x)) < 0 || x > this.width) {
+    if ((x = Math.floor(x)) < 0 || x >= this.width) {
       throw new Error('checkForLine: Invalid x input: ' + x);
     }
-    if ((y = Math.floor(y)) < 0 || y > this.height) {
+    if ((y = Math.floor(y)) < 0 || y >= this.height) {
       throw new Error('checkForLine: Invalid y input: ' + y);
     }
     if ((dx = Math.floor(dx)) < -1 || dx > 1) {
