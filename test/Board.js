@@ -1,5 +1,6 @@
 const assert = require('assert');
 const Board = require('../model/Board');
+const Player = require('../model/Player');
 
 describe('Board', function() {
   describe('#constructor', function() {
@@ -49,6 +50,11 @@ describe('Board', function() {
       ];
       assert.deepEqual(initialBoard.state, correctBoard);
     });
+
+    it('should return `this\'', function() {
+      const testBoard = new Board();
+      assert.strictEqual(testBoard.defaultStart(), testBoard);
+    });
   });
 
   describe('#stateToString', function() {
@@ -57,6 +63,12 @@ describe('Board', function() {
       const correctString = '00000000\n00000000\n00000000\n00012000\n' +
       '00021000\n00000000\n00000000\n00000000\n';
       assert.strictEqual(initialBoardString, correctString);
+    });
+
+    it('should stringify an empty board correctly', function() {
+      const emptyBoardString = new Board(3, 5).stateToString();
+      const correctString = '000\n000\n000\n000\n000\n';
+      assert.strictEqual(emptyBoardString, correctString);
     });
   });
 
@@ -74,30 +86,37 @@ describe('Board', function() {
       [0, 1, 0, 2, 0, 0, 0, 0],
       [0, 0, 0, 2, 0, 0, 0, 0],
     ];
+    const randomPlayer = new Player();
     it('should throw error on invalid input', function() {
       assert.throws(
           () => {
-            testBoard.checkForLine(-2, 3, 0, 0);
+            testBoard.checkForLine(-2, 3, 0, 0, p1);
           },
           new Error('checkForLine: Invalid x input: -2')
       );
       assert.throws(
           () => {
-            testBoard.checkForLine(5, 30, 0, 0);
+            testBoard.checkForLine(5, 30, 0, 0, p1);
           },
           new Error('checkForLine: Invalid y input: 30')
       );
       assert.throws(
           () => {
-            testBoard.checkForLine(5.5, 8, -4, 0);
+            testBoard.checkForLine(5.5, 8, -4, 0, p1);
           },
           new Error('checkForLine: Invalid dx input: -4')
       );
       assert.throws(
           () => {
-            testBoard.checkForLine(5.5, 8, -1, 33.3);
+            testBoard.checkForLine(5.5, 8, -1, 33.3, p1);
           },
           new Error('checkForLine: Invalid dy input: 33')
+      );
+      assert.throws(
+          () => {
+            testBoard.checkForLine(randomPlayer);
+          },
+          new Error('checkForLine: Invalid p')
       );
     });
 
@@ -117,7 +136,7 @@ describe('Board', function() {
     it(
         'should return false when line of enemies reaches board edge',
         function() {
-          assert.strictEqual(testBoard.checkForLine(3, 4, 1, 0), false);
+          assert.strictEqual(testBoard.checkForLine(3, 4, 1, 0, p1), false);
         }
     );
 
@@ -131,6 +150,39 @@ describe('Board', function() {
       ];
       assert.strictEqual(simpleBoard.checkForLine(0, 0, 0, 1, simpleP1), true);
       assert.strictEqual(testBoard.checkForLine(2, 6, 1, -1, p2), true);
+    });
+  });
+
+  describe('#getValidPlays', function() {
+    it('should throw error on invalid input', function() {
+      const testBoard = new Board();
+      const randomPlayer = new Player();
+      assert.throws(
+          () => {
+            testBoard.getValidPlays(randomPlayer);
+          },
+          new Error('getValidPlays: Invalid p')
+      );
+    });
+
+    it('should correctly list all valid plays', function() {
+      const testBoard = new Board(4, 4, 2).defaultStart();
+      const p1 = testBoard.players[0];
+      const p2 = testBoard.players[1];
+      const correctP1Plays = [
+        {x: 0, y: 2},
+        {x: 1, y: 3},
+        {x: 2, y: 0},
+        {x: 3, y: 1},
+      ];
+      const correctP2Plays = [
+        {x: 0, y: 1},
+        {x: 1, y: 0},
+        {x: 2, y: 3},
+        {x: 3, y: 2},
+      ];
+      assert.deepEqual(testBoard.getValidPlays(p1), correctP1Plays);
+      assert.deepEqual(testBoard.getValidPlays(p2), correctP2Plays);
     });
   });
 });

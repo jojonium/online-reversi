@@ -90,31 +90,39 @@ class Board {
    * @return {[{x: number, y: number}]} the list of valid moves
    */
   getValidPlays(p) {
+    // check for invalid player
+    if (this.players.indexOf(p) < 0) {
+      throw new Error('getValidPlays: Invalid p');
+    }
+
     const out = [];
     // iterate through all squares on the board
-    for (let i = 0; i < this.state.width; ++i) {
-      for (let j = 0; j < this.state.height; ++j) {
-        // at each square, we want to check if there is an unbroken line of
-        // enemy pieces terminated by one of our own. That denotes a valid move
-        // because it would capture those pieces
-        for (let dx = -1; dx <= 1; dx++) {
-          for (let dy = -1; dy <= 1; dy++) {
-            // check for out of bounds
-            if (
-              i + dx >= 0 && // not out of bounds
-              i + dx < this.width &&
-              j + dy >= 0 &&
-              j + dy < this.height &&
-              this.state[i + dx][j + dy] > 0 && // not empty
-              // and not this player's color
-              this.state[i + dx][j + dy] !== this.players.indexOf(p) + 1
-            ) {
-              // found an adjacent enemy piece. Recursively walk down it to see
-              // if it's a line that ends with a friendly piece
-              if (this.checkForLine(i + dx, j + dy, dx, dy)) {
-                // found a valid line in this direction, add this point to the
-                // output list
-                out.push({x: i + dx, y: j + dy});
+    for (let i = 0; i < this.width; ++i) {
+      for (let j = 0; j < this.height; ++j) {
+        // at each empty square, we want to check if there is an unbroken line
+        // of enemy pieces terminated by one of our own. That denotes a valid
+        // move because it would capture those pieces
+        if (this.state[i][j] === 0) { // this square is empty
+          for (let dx = -1; dx <= 1; dx++) {
+            for (let dy = -1; dy <= 1; dy++) {
+              // check adjacent squares
+              if (
+                i + dx >= 0 && // not out of bounds
+                i + dx < this.width &&
+                j + dy >= 0 &&
+                j + dy < this.height &&
+                this.state[i + dx][j + dy] > 0 && // not empty
+                // and not this player's color
+                this.state[i + dx][j + dy] !== this.players.indexOf(p) + 1
+              ) {
+                // found an empty square with an adjacent enemy piece.
+                // Recursively walk down it to see if it's a line that ends with
+                // a friendly piece
+                if (this.checkForLine(i, j, dx, dy, p)) {
+                  // found a valid line in this direction, add this point to the
+                  // output list
+                  out.push({x: i, y: j});
+                }
               }
             }
           }
@@ -158,6 +166,9 @@ class Board {
     }
     if ((dy = Math.floor(dy)) < -1 || dy > 1) {
       throw new Error('checkForLine: Invalid dy input: ' + dy);
+    }
+    if (this.players.indexOf(p) < 0) {
+      throw new Error('checkForLine: Invalid p');
     }
 
     // if the first space isn't empty it obviously can't be a valid move
