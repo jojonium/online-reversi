@@ -1,10 +1,11 @@
 {
   "name": "online-reversi",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A web app for playing reversi online",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "start": "node index.js"
   },
   "author": "Joseph Petitti",
   "license": "MIT",
