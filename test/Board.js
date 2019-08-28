@@ -114,7 +114,7 @@ describe('Board', function() {
       );
       assert.throws(
           () => {
-            testBoard.checkForLine(randomPlayer);
+            testBoard.checkForLine(0, 0, 0, 0, randomPlayer);
           },
           new Error('checkForLine: Invalid p')
       );
@@ -183,6 +183,31 @@ describe('Board', function() {
       ];
       assert.deepEqual(testBoard.getValidPlays(p1), correctP1Plays);
       assert.deepEqual(testBoard.getValidPlays(p2), correctP2Plays);
+    });
+
+    it('should return [] when there are no valid plays', function() {
+      const testBoard = new Board(4, 4, 3);
+      const p1 = testBoard.players[0];
+      testBoard.state = [
+        [1, 0, 0, 0],
+        [1, 2, 2, 2],
+        [0, 0, 3, 0],
+        [2, 1, 0, 3],
+      ];
+      assert.deepEqual(testBoard.getValidPlays(p1), []);
+    });
+
+    it('should not contain duplicate points', function() {
+      const testBoard = new Board(4, 4, 2);
+      const p1 = testBoard.players[0];
+      testBoard.state = [
+        [0, 0, 0, 0],
+        [1, 2, 0, 0],
+        [0, 0, 2, 0],
+        [0, 0, 1, 0],
+      ];
+      console.log(testBoard.stateToString());
+      assert.deepEqual(testBoard.getValidPlays(p1), [{x: 1, y: 2}]);
     });
   });
 });
