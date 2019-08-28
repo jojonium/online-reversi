@@ -85,7 +85,8 @@ class Board {
 
 
   /**
-   * returns an array of points representing valid moves for a given player
+   * Returns an array of points representing valid moves for a given player,
+   * with no duplicates (even if a singple piece could flip multiple lines)
    * @param {Player} p the player for whom the moves are valid
    * @return {Array<{x: number, y: number}>} the list of valid moves
    */
@@ -128,6 +129,54 @@ class Board {
               }
             }
           }
+        }
+      }
+    }
+    return out;
+  }
+
+  /**
+   * Checks whether a player can legally place a piece at a given location
+   * @param {number} x the x-coordinate to check
+   * @param {number} y the y-coordinate to check
+   * @param {Player} p the player making the move
+   * @return {Array<{dx: number, dy: number}>} a list of directions
+   * representing which lines would be flipped if a piece is placed here. The
+   * array is empty if this is not a valid move
+   */
+  isValidMove(x, y, p) {
+    // check for valid input
+    if ((x = Math.floor(x)) < 0 || x >= this.width) {
+      throw new Error('isValidMove: Invalid x input: ' + x);
+    }
+    if ((y = Math.floor(y)) < 0 || y >= this.height) {
+      throw new Error('isValidMove: Invalid y input: ' + y);
+    }
+    if (this.players.indexOf(p) < 0) {
+      throw new Error('isValidMove: Invalid p');
+    }
+
+    const out = [];
+    // if this spot isn't empty it can't be valid
+    if (this.state[x][y] !== 0) {
+      return out;
+    }
+    // for each direction
+    for (let dx = -1; dx <= 1; ++dx) {
+      for (let dy = -1; dy <= 1; ++dy) {
+        if (
+          x + dx >= 0 && // not out of bounds
+          x + dx < this.width &&
+          y + dy >= 0 &&
+          y + dy < this.height &&
+          this.state[x + dx][y + dy] > 0 && // not empty
+          // and not this player's color
+          this.state[x + dx][y + dy] !== this.players.indexOf(p) + 1 &&
+          // Recursively walk down this direction to see if it's a line
+          // that ends with a friendly piece
+          this.checkForLine(x, y, dx, dy, p)
+        ) {
+          out.push({dx: dx, dy: dy});
         }
       }
     }

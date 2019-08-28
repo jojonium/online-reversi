@@ -206,8 +206,62 @@ describe('Board', function() {
         [0, 0, 2, 0],
         [0, 0, 1, 0],
       ];
-      console.log(testBoard.stateToString());
       assert.deepEqual(testBoard.getValidPlays(p1), [{x: 1, y: 2}]);
+    });
+  });
+
+  describe('#isValidMove', function() {
+    it('should throw error on invalid input', function() {
+      const testBoard = new Board();
+      const randomPlayer = new Player();
+      const p1 = testBoard.players[0];
+      assert.throws(
+          () => {
+            testBoard.isValidMove(-2.3, 3, p1);
+          },
+          new Error('isValidMove: Invalid x input: -3')
+      );
+      assert.throws(
+          () => {
+            testBoard.isValidMove(0, 13, p1);
+          },
+          new Error('isValidMove: Invalid y input: 13')
+      );
+      assert.throws(
+          () => {
+            testBoard.isValidMove(0, 0, randomPlayer);
+          },
+          new Error('isValidMove: Invalid p')
+      );
+    });
+
+    it('should return [] on occupied point', function() {
+      const testBoard = new Board(4, 4, 2).defaultStart();
+      const p1 = testBoard.players[0];
+      assert.deepEqual(testBoard.isValidMove(2, 2, p1), []);
+    });
+
+    it('should return [] on invalid move', function() {
+      const testBoard = new Board(4, 4, 2).defaultStart();
+      const p1 = testBoard.players[0];
+      assert.deepEqual(testBoard.isValidMove(0, 3, p1), []);
+    });
+
+    it('should correctly identify directions that would flip', function() {
+      const testBoard = new Board(4, 4, 2);
+      const p1 = testBoard.players[0];
+      testBoard.state = [
+        [0, 0, 2, 0],
+        [1, 2, 0, 0],
+        [0, 2, 2, 0],
+        [1, 0, 1, 0],
+      ];
+      const correctDirs = [
+        {dx: 0, dy: -1},
+        {dx: 1, dy: -1},
+        {dx: 1, dy: 0},
+      ];
+      assert.deepEqual(testBoard.isValidMove(1, 2, p1), correctDirs);
     });
   });
 });
