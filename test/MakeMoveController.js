@@ -37,5 +37,35 @@ describe('MakeMoveController', function() {
           new Error('move: Invalid p')
       );
     });
+
+    it('should return a 400 object on invalid move', function() {
+      const app = express();
+      const testBoard = new Board().defaultStart();
+      const p1 = testBoard.players[0];
+      const outObj = new MakeMoveController(testBoard, app).move(0, 0, p1);
+      assert.strictEqual(outObj.status, 400);
+      assert.strictEqual(outObj.message, 'Invalid move');
+    });
+
+    it('should perform a valid move', function() {
+      const app = express();
+      const testBoard = new Board(4, 4, 2);
+      const p1 = testBoard.players[0];
+      testBoard.state = [
+        [-1, 0, -1, 0],
+        [-1, 1, 1, -1],
+        [-1, -1, 1, 0],
+        [-1, -1, -1, -1],
+      ];
+      const stateAfter = [
+        [-1, 0, -1, 0],
+        [-1, 0, 0, -1],
+        [-1, 0, 0, 0],
+        [-1, -1, -1, -1],
+      ];
+      const outObj = new MakeMoveController(testBoard, app).move(2, 1, p1);
+      assert.strictEqual(outObj.status, 200);
+      assert.deepEqual(JSON.parse(outObj.message), stateAfter);
+    });
   });
 });
