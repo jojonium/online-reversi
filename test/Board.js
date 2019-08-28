@@ -39,16 +39,22 @@ describe('Board', function() {
     it('should initialize BW pattern in center of board', function() {
       const initialBoard = new Board().defaultStart();
       const correctBoard = [
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 1, 2, 0, 0, 0],
-        [0, 0, 0, 2, 1, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
+        [-1, -1, -1, -1, -1, -1, -1, -1],
+        [-1, -1, -1, -1, -1, -1, -1, -1],
+        [-1, -1, -1, -1, -1, -1, -1, -1],
+        [-1, -1, -1, 0, 1, -1, -1, -1],
+        [-1, -1, -1, 1, 0, -1, -1, -1],
+        [-1, -1, -1, -1, -1, -1, -1, -1],
+        [-1, -1, -1, -1, -1, -1, -1, -1],
+        [-1, -1, -1, -1, -1, -1, -1, -1],
       ];
       assert.deepEqual(initialBoard.state, correctBoard);
+    });
+
+    it('should set player scores to 2', function() {
+      const testBoard = new Board().defaultStart();
+      assert.strictEqual(testBoard.players[0].score, 2);
+      assert.strictEqual(testBoard.players[1].score, 2);
     });
 
     it('should return `this\'', function() {
@@ -60,14 +66,14 @@ describe('Board', function() {
   describe('#stateToString', function() {
     it('should stringify the default start correctly', function() {
       const initialBoardString = new Board().defaultStart().stateToString();
-      const correctString = '00000000\n00000000\n00000000\n00012000\n' +
-      '00021000\n00000000\n00000000\n00000000\n';
+      const correctString = '________\n________\n________\n___01___\n' +
+      '___10___\n________\n________\n________\n';
       assert.strictEqual(initialBoardString, correctString);
     });
 
     it('should stringify an empty board correctly', function() {
       const emptyBoardString = new Board(3, 5).stateToString();
-      const correctString = '000\n000\n000\n000\n000\n';
+      const correctString = '___\n___\n___\n___\n___\n';
       assert.strictEqual(emptyBoardString, correctString);
     });
   });
@@ -77,14 +83,14 @@ describe('Board', function() {
     const p1 = testBoard.players[0];
     const p2 = testBoard.players[1];
     testBoard.state = [
-      [0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 1, 1, 1, 0, 0],
-      [0, 0, 0, 2, 1, 2, 0, 0],
-      [0, 0, 2, 2, 0, 0, 0, 0],
-      [0, 1, 0, 2, 0, 0, 0, 0],
-      [0, 0, 0, 2, 0, 0, 0, 0],
+      [-1, -1, -1, -1, -1, -1, -1, -1],
+      [-1, -1, -1, -1, -1, -1, -1, -1],
+      [-1, -1, -1, -1, -1, -1, -1, -1],
+      [-1, -1, -1, 0, 0, 0, -1, -1],
+      [-1, -1, -1, 1, 0, 1, -1, -1],
+      [-1, -1, 1, 1, -1, -1, -1, -1],
+      [-1, 0, -1, 1, -1, -1, -1, -1],
+      [-1, -1, -1, 1, -1, -1, -1, -1],
     ];
     const randomPlayer = new Player();
     it('should throw error on invalid input', function() {
@@ -144,9 +150,9 @@ describe('Board', function() {
       const simpleBoard = new Board(3, 3, 2);
       const simpleP1 = simpleBoard.players[0];
       simpleBoard.state = [
-        [0, 2, 1],
-        [0, 2, 0],
-        [0, 1, 0],
+        [-1, 1, 0],
+        [-1, 1, -1],
+        [-1, 0, -1],
       ];
       assert.strictEqual(simpleBoard.checkForLine(0, 0, 0, 1, simpleP1), true);
       assert.strictEqual(testBoard.checkForLine(2, 6, 1, -1, p2), true);
@@ -201,10 +207,10 @@ describe('Board', function() {
       const testBoard = new Board(4, 4, 2);
       const p1 = testBoard.players[0];
       testBoard.state = [
-        [0, 0, 0, 0],
-        [1, 2, 0, 0],
-        [0, 0, 2, 0],
-        [0, 0, 1, 0],
+        [-1, -1, -1, -1],
+        [0, 1, -1, -1],
+        [-1, -1, 1, -1],
+        [-1, -1, 0, -1],
       ];
       assert.deepEqual(testBoard.getValidPlays(p1), [{x: 1, y: 2}]);
     });
@@ -251,10 +257,10 @@ describe('Board', function() {
       const testBoard = new Board(4, 4, 2);
       const p1 = testBoard.players[0];
       testBoard.state = [
-        [0, 0, 2, 0],
-        [1, 2, 0, 0],
-        [0, 2, 2, 0],
-        [1, 0, 1, 0],
+        [-1, -1, 1, -1],
+        [0, 1, -1, -1],
+        [-1, 1, 1, -1],
+        [0, -1, 0, -1],
       ];
       const correctDirs = [
         {dx: 0, dy: -1},
