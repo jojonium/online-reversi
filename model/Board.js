@@ -266,38 +266,58 @@ class Board {
   /**
    * Makes a move at a location for a player. First checks to make sure the
    * move is valid, then makes it, flipping the correct pieces and adjusting
-   * scores. Returns false if the move is invalid, or the new Board otherwise
+   * scores. Returns null if the move is invalid, or the new Board otherwise
    * @param {number} x the x-coordinate of the move
    * @param {number} y the y-coordinate of the move
    * @param {Player} p the player making the move
-   * @return {Board | false}
+   * @return {Board}
    */
   safeMakeMove(x, y, p) {
     // check for valid input
     if ((x = Math.floor(x)) < 0 || x >= this.width) {
-      throw new Error('isValidMove: Invalid x input: ' + x);
+      throw new Error('safeMakeMove: Invalid x input: ' + x);
     }
     if ((y = Math.floor(y)) < 0 || y >= this.height) {
-      throw new Error('isValidMove: Invalid y input: ' + y);
+      throw new Error('safeMakeMove: Invalid y input: ' + y);
     }
     const myNum = this.players.indexOf(p);
     if (myNum < 0) {
-      throw new Error('isValidMove: Invalid p');
+      throw new Error('safeMakeMove: Invalid p');
     }
 
     // see which directions would be flipped
     const dirs = this.isValidMove(x, y, p);
     if (dirs.length === 0) {
-      // if the move is invalid just return false
-      return false;
+      // if the move is invalid just return null
+      return null;
     }
+
+    // place a piece here
+    this.state[x][y] = myNum;
+    // add a score for this piece
+    p.score++;
 
     for (const d in dirs) {
       if (dirs[d]) {
         // for each direction, walk in that direction flipping enemy pieces
         // until we reach a friendly piece
+        const dx = dirs[d].dx;
+        const dy = dirs[d].dy;
+        let i = x + dx;
+        let j = y + dy;
+        while (this.state[i][j] !== myNum) {
+          // subtract one from enemy score
+          this.players[this.state[i][j]].score--;
+          // add one to this player's score
+          p.score++;
+          // flip the piece
+          this.state[i][j] = myNum;
+          i += dx;
+          j += dy;
+        }
       }
     }
+    return this;
   }
 }
 

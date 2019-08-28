@@ -270,4 +270,81 @@ describe('Board', function() {
       assert.deepEqual(testBoard.isValidMove(1, 2, p1), correctDirs);
     });
   });
+
+  describe('#safeMakeMove', function() {
+    it('should throw error on invalid input', function() {
+      const testBoard = new Board();
+      const randomPlayer = new Player();
+      const p1 = testBoard.players[0];
+      assert.throws(
+          () => {
+            testBoard.safeMakeMove(-2.3, 3, p1);
+          },
+          new Error('safeMakeMove: Invalid x input: -3')
+      );
+      assert.throws(
+          () => {
+            testBoard.safeMakeMove(0, 13, p1);
+          },
+          new Error('safeMakeMove: Invalid y input: 13')
+      );
+      assert.throws(
+          () => {
+            testBoard.safeMakeMove(0, 0, randomPlayer);
+          },
+          new Error('safeMakeMove: Invalid p')
+      );
+    });
+
+    it('should return null for an invalid move', function() {
+      const testBoard = new Board().defaultStart();
+      const p1 = testBoard.players[0];
+      assert.strictEqual(testBoard.safeMakeMove(0, 0, p1), null);
+    });
+
+    it('should correctly flip one line', function() {
+      const testBoard = new Board(4, 4, 2).defaultStart();
+      const p1 = testBoard.players[0];
+      const stateAfter = [
+        [-1, -1, -1, -1],
+        [-1, 0, 1, -1],
+        [0, 0, 0, -1],
+        [-1, -1, -1, -1],
+      ];
+      assert.deepEqual(testBoard.safeMakeMove(2, 0, p1).state, stateAfter);
+    });
+
+    it('should correctly flip multiple lines', function() {
+      const testBoard = new Board(4, 4, 2);
+      const p1 = testBoard.players[0];
+      testBoard.state = [
+        [-1, 0, -1, 0],
+        [-1, 1, 1, -1],
+        [-1, -1, 1, 0],
+        [-1, -1, -1, -1],
+      ];
+      const stateAfter = [
+        [-1, 0, -1, 0],
+        [-1, 0, 0, -1],
+        [-1, 0, 0, 0],
+        [-1, -1, -1, -1],
+      ];
+      assert.deepEqual(testBoard.safeMakeMove(2, 1, p1).state, stateAfter);
+    });
+
+    it('should correctly set scores', function() {
+      const testBoard = new Board(4, 4, 2);
+      testBoard.state = [
+        [-1, 0, -1, 0],
+        [-1, 1, 1, -1],
+        [-1, -1, 1, 0],
+        [-1, -1, -1, -1],
+      ];
+      testBoard.players[0].score = 3;
+      testBoard.players[1].score = 3;
+      testBoard.safeMakeMove(2, 1, testBoard.players[0]);
+      assert.strictEqual(testBoard.players[0].score, 7);
+      assert.strictEqual(testBoard.players[1].score, 0);
+    });
+  });
 });
