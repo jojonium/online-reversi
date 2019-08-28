@@ -26,7 +26,7 @@ require('./router/main')(app);
 require('./router/api')(app, conn);
 
 // specify views directory
-app.set('views', __dirname + '/views');
+app.set('views', __dirname + '/view');
 
 // specify directory for static content
 app.use(express.static(__dirname + '/static'));

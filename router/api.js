@@ -2,7 +2,12 @@ const helpers = require('./helpers');
 const Board = require('../model/Board');
 const bcrypt = require('bcrypt');
 
-module.exports = (app, conn) => {
+/**
+ * simple functions that adds endpoints for the API
+ * @param {express.Express} app top-level app
+ * @param {mysql.Connection} conn MySQL server connection
+ */
+const api = (app, conn) => {
   /*
    * get info about a single game from the database, including the last time it
    * was modified and the names of each of the players
@@ -228,3 +233,6 @@ module.exports = (app, conn) => {
     });
   });
 };
+
+
+module.exports = api;

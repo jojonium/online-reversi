@@ -87,7 +87,7 @@ class Board {
   /**
    * returns an array of points representing valid moves for a given player
    * @param {Player} p the player for whom the moves are valid
-   * @return {[{x: number, y: number}]} the list of valid moves
+   * @return {Array<{x: number, y: number}>} the list of valid moves
    */
   getValidPlays(p) {
     // check for invalid player
@@ -103,6 +103,7 @@ class Board {
         // of enemy pieces terminated by one of our own. That denotes a valid
         // move because it would capture those pieces
         if (this.state[i][j] === 0) { // this square is empty
+          squareChecker: // label this loop so we can break out later
           for (let dx = -1; dx <= 1; dx++) {
             for (let dy = -1; dy <= 1; dy++) {
               // check adjacent squares
@@ -113,16 +114,17 @@ class Board {
                 j + dy < this.height &&
                 this.state[i + dx][j + dy] > 0 && // not empty
                 // and not this player's color
-                this.state[i + dx][j + dy] !== this.players.indexOf(p) + 1
+                this.state[i + dx][j + dy] !== this.players.indexOf(p) + 1 &&
+                // Recursively walk down this direction to see if it's a line
+                // that ends with a friendly piece
+                this.checkForLine(i, j, dx, dy, p)
               ) {
-                // found an empty square with an adjacent enemy piece.
-                // Recursively walk down it to see if it's a line that ends with
-                // a friendly piece
-                if (this.checkForLine(i, j, dx, dy, p)) {
-                  // found a valid line in this direction, add this point to the
-                  // output list
-                  out.push({x: i, y: j});
-                }
+                // found a valid line in this direction, add this point to the
+                // output list
+                out.push({x: i, y: j});
+                // now break out of the for loop so we don't add the same
+                // point multiple times
+                break squareChecker;
               }
             }
           }
@@ -155,10 +157,10 @@ class Board {
    */
   checkForLine(x, y, dx, dy, p, first = true) {
     // check for valid input
-    if ((x = Math.floor(x)) < 0 || x > this.width) {
+    if ((x = Math.floor(x)) < 0 || x >= this.width) {
       throw new Error('checkForLine: Invalid x input: ' + x);
     }
-    if ((y = Math.floor(y)) < 0 || y > this.height) {
+    if ((y = Math.floor(y)) < 0 || y >= this.height) {
       throw new Error('checkForLine: Invalid y input: ' + y);
     }
     if ((dx = Math.floor(dx)) < -1 || dx > 1) {
