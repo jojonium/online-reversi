@@ -23,12 +23,12 @@ class MakeMoveController {
 
 
   /**
-   * Checks whether a move is valid; then makes the move and returns an object
-   * containing the new board state, returns an object containing an error if
-   * the move is invalid
+   * Checks whether a move is valid, then makes the move if so. Returns false
+   * if the move was invalid, or the updated board otherwise
    * @param {number} x x-coordinate of the move to make
    * @param {number} y y-coordinate of the move to make
    * @param {Player} p the player making the move
+   * @return {{status: number, message: string}}
    */
   move(x, y, p) {
     // check for invalid input
@@ -42,11 +42,14 @@ class MakeMoveController {
       throw new Error('move: Invalid p');
     }
 
-    // check to make sure the move is valid
-    // TODO implement
-    // if (this.board.isValidMove(x, y, p)) {
-    //   ...
-    // }
+    // make the move
+    const newBoard = this.board.safeMakeMove(x, y, p);
+    if (newBoard === null) {
+      // the move was invalid
+      return {status: 400, message: 'Invalid move'};
+    } else {
+      return {status: 200, message: JSON.stringify(newBoard.state)};
+    }
   }
 }
 
