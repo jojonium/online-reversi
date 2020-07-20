@@ -1,3 +1,8 @@
+# ARCHIVED
+
+I don't have the time or interest to continue working on this project, so I've
+marked the repository as read only.
+
 # Online Reversi
 
 A simple web app for playing the game Reversi online.
